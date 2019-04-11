@@ -13,10 +13,9 @@
 					"script": {
 						"id": "36ed2def-7628-40cf-b420-bf65a1401fef",
 						"exec": [
-							"var loginToken = xml2Json(responseBody).ajax_response_xml_root;",
+							"var root = xml2Json(responseBody).ajax_response_xml_root;",
 							"var password = '';",
-							"var sha256 = CryptoJS.SHA256(password + loginToken).toString();",
-							"console.log(loginToken, password, sha256);",
+							"var sha256 = CryptoJS.SHA256(password + root).toString();",
 							"pm.globals.set(\"password\", sha256);",
 							""
 						],
@@ -92,23 +91,109 @@
 			"response": []
 		},
 		{
-			"name": ".../getpage.lua?nextpage=home_wlanDevice_lua.lua",
+			"name": ".../getpage.lua?nextpage=home_lanDevice_lua.lua",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19a39383-baad-4357-8c60-16558d893e2b",
+						"exec": [
+							"var root = xml2Json(responseBody).ajax_response_xml_root;",
+							"var instances = root.OBJ_ACCESSDEV_ID.Instance;",
+							"",
+							"function writeInstance(instance) {",
+							"    instance.ParaName.forEach(function(param, index) {",
+							"        console.log(param + ': ' + instance.ParaValue[index]);",
+							"    });",
+							"}",
+							"",
+							"if (instances.length) {",
+							"    instances.forEach(writeInstance);",
+							"} else {",
+							"    writeInstance(instances);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "Cookie",
-						"value": "SID=4bfba5c19bea789f3024e15926b8c3a5ce36934c779be9423c2cb5facfef178f",
-						"type": "text",
-						"disabled": true
-					}
-				],
+				"header": [],
 				"body": {
 					"mode": "raw",
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://10.0.0.1/getpage.lua?pid=1005&nextpage=home_wlanDevice_lua.lua&InstNum=5&_=1554974112104",
+					"raw": "http://10.0.0.1/getpage.lua?pid=1005&nextpage=home_lanDevice_lua.lua&InstNum=5&_=1",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"getpage.lua"
+					],
+					"query": [
+						{
+							"key": "pid",
+							"value": "1005"
+						},
+						{
+							"key": "nextpage",
+							"value": "home_lanDevice_lua.lua"
+						},
+						{
+							"key": "InstNum",
+							"value": "5"
+						},
+						{
+							"key": "_",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": ".../getpage.lua?nextpage=home_wlanDevice_lua.lua",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52929234-f2be-4afc-8c4c-bcbb3eb46056",
+						"exec": [
+							"var root = xml2Json(responseBody).ajax_response_xml_root;",
+							"var instances = root.OBJ_ACCESSDEV_ID.Instance;",
+							"",
+							"function writeInstance(instance) {",
+							"    instance.ParaName.forEach(function(param, index) {",
+							"        console.log(param + ': ' + instance.ParaValue[index]);",
+							"    });",
+							"}",
+							"",
+							"if (instances.length) {",
+							"    instances.forEach(writeInstance);",
+							"} else {",
+							"    writeInstance(instances);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.0.0.1/getpage.lua?pid=1005&nextpage=home_wlanDevice_lua.lua&InstNum=5&_=1",
 					"protocol": "http",
 					"host": [
 						"10",
@@ -134,7 +219,7 @@
 						},
 						{
 							"key": "_",
-							"value": "1554974112104"
+							"value": "1"
 						}
 					]
 				}
