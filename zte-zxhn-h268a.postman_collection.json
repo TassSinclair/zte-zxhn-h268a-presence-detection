@@ -1,0 +1,145 @@
+{
+	"info": {
+		"_postman_id": "fa6da174-3b0e-4443-859b-f62a754b05ab",
+		"name": "zte-zxhn-h268a",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": ".../logintoken_lua.lua",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "36ed2def-7628-40cf-b420-bf65a1401fef",
+						"exec": [
+							"var loginToken = xml2Json(responseBody).ajax_response_xml_root;",
+							"var password = '';",
+							"var sha256 = CryptoJS.SHA256(password + loginToken).toString();",
+							"console.log(loginToken, password, sha256);",
+							"pm.globals.set(\"password\", sha256);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.0.0.1/function_module/login_module/login_page/logintoken_lua.lua",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"function_module",
+						"login_module",
+						"login_page",
+						"logintoken_lua.lua"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Password",
+							"value": "{{password}}",
+							"type": "text"
+						},
+						{
+							"key": "Username",
+							"value": "admin",
+							"type": "text"
+						},
+						{
+							"key": "action",
+							"value": "login",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://10.0.0.1/",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": ".../getpage.lua?nextpage=home_wlanDevice_lua.lua",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "SID=4bfba5c19bea789f3024e15926b8c3a5ce36934c779be9423c2cb5facfef178f",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://10.0.0.1/getpage.lua?pid=1005&nextpage=home_wlanDevice_lua.lua&InstNum=5&_=1554974112104",
+					"protocol": "http",
+					"host": [
+						"10",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"getpage.lua"
+					],
+					"query": [
+						{
+							"key": "pid",
+							"value": "1005"
+						},
+						{
+							"key": "nextpage",
+							"value": "home_wlanDevice_lua.lua"
+						},
+						{
+							"key": "InstNum",
+							"value": "5"
+						},
+						{
+							"key": "_",
+							"value": "1554974112104"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
