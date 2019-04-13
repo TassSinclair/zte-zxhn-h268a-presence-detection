@@ -21,7 +21,6 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 def get_scanner(hass, config):
-    _LOGGER.warning('Attempting to get ZTE Device Scanner')
     info = config[DOMAIN]
     host = info.get(CONF_HOST)
     user = info.get(CONF_USERNAME)
@@ -32,12 +31,7 @@ def get_scanner(hass, config):
     scanner = ZteDeviceScanner(host, user, password,
                                    tracked_devices, excluded_devices)
 
-    _LOGGER.warning('Did set up Scanner')
-    try:
-        scanner.perform_login()
-        return scanner
-    except Exception:
-        return None
+    return scanner if scanner.init_success else None
 
 class ZteDeviceScanner(DeviceScanner):
 
@@ -47,29 +41,34 @@ class ZteDeviceScanner(DeviceScanner):
         self.tracked_devices = tracked_devices
         self.excluded_devices = excluded_devices
         self.results = []
+        
         self.zte_client = ZteClient(password, host=host, user=user)
-    
-    def perform_login(self):
-        self.zte_client.login()
+        self.perform_device_scan()
+        self.init_success = self.results is not None
+        if not self.init_success:
+            _LOGGER.error("ZTE client could not connect")
 
     def perform_device_scan(self):
-        self.perform_login()
+        self.zte_client.login()
         self.results = self.zte_client.get_connected_devices()
 
     def scan_devices(self):
+        if not self.init_success:
+            return
+
         self.perform_device_scan()
         
         devices = []
 
         for device in self.results:
-            tracked = (not self.tracked_devices or
-                       device.mac_address in self.tracked_devices or
-                       device.host_name in self.tracked_devices)
-            tracked = tracked and (not self.excluded_devices or not(
-                device.mac_address in self.excluded_devices or
-                device.host_name in self.excluded_devices))
-            if tracked:
-                devices.append(device.mac_address)
+            # tracked = (not self.tracked_devices or
+            #            device.mac_address in self.tracked_devices or
+            #            device.host_name in self.tracked_devices)
+            # tracked = tracked and (not self.excluded_devices or not(
+            #     device.mac_address in self.excluded_devices or
+            #     device.host_name in self.excluded_devices))
+            # if tracked:
+            devices.append(device.mac_address)
         return devices
 
     def get_device_name(self, device):
