@@ -1,5 +1,6 @@
 import logging
 import voluptuous
+from typing import List
 from ZteClient import ZteClient
 
 import homeassistant.helpers.config_validation as cv
@@ -20,7 +21,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
         voluptuous.All(cv.ensure_list, [cv.string]),
 })
 
-def get_scanner(hass, config):
+def get_scanner(hass, config) -> DeviceScanner:
     info = config[DOMAIN]
     host = info.get(CONF_HOST)
     user = info.get(CONF_USERNAME)
@@ -54,7 +55,7 @@ class ZteDeviceScanner(DeviceScanner):
         self.perform_login()
         self.results = self.zte_client.get_connected_devices()
 
-    def scan_devices(self):
+    def scan_devices(self) -> List[str]:
         self.perform_device_scan
         
         devices = []
@@ -70,7 +71,7 @@ class ZteDeviceScanner(DeviceScanner):
                 devices.append(device.mac_address)
         return devices
 
-    def get_device_name(self, device):
+    def get_device_name(self, device) -> str:
         parts = device.split("_")
         mac_address = parts[0]
         ap_mac_address = None
