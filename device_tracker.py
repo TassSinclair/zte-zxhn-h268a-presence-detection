@@ -57,7 +57,7 @@ class ZteDeviceScanner(DeviceScanner):
         self.results = self.zte_client.get_connected_devices()
 
     def scan_devices(self):
-        self.perform_device_scan
+        self.perform_device_scan()
         
         devices = []
 
