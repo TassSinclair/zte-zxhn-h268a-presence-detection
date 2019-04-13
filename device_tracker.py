@@ -22,6 +22,7 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
 })
 
 def get_scanner(hass, config) -> DeviceScanner:
+    _LOGGER.warning('Attempting to get ZTE Device Scanner')
     info = config[DOMAIN]
     host = info.get(CONF_HOST)
     user = info.get(CONF_USERNAME)
@@ -32,6 +33,7 @@ def get_scanner(hass, config) -> DeviceScanner:
     scanner = ZteDeviceScanner(host, user, password,
                                    tracked_devices, excluded_devices)
 
+    _LOGGER.warning('Did set up Scanner')
     try:
         scanner.perform_login()
         return scanner
