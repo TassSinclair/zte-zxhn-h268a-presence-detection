@@ -27,22 +27,22 @@ class ZteClient():
 
         except requests.exceptions.RequestException:
             _LOGGER.exception("failed to perform login")
+            raise Exception("failed to perform login")
 
     def __get_login_token(self):
         loginTokenUrl = self.baseUrl + "function_module/login_module/login_page/logintoken_lua.lua"
         response = requests.get(loginTokenUrl, timeout=30, verify=False, cookies=self.cookie_jar)
         login_token = ET.fromstring(response.text).text
-        _LOGGER.info("got login token {}".format(login_token))
+        _LOGGER.debug("got login token %s", login_token)
         return login_token
 
     def __post_login_and_get_cookies(self, login_token):
         encodedPassword = hashlib.sha256((self.password + login_token).encode('utf-8')).hexdigest()
         data = {'action': (None, 'login'), 'Username': (None, 'admin'), 'Password': (None, encodedPassword)}
-        _LOGGER.info(data)
         response = requests.post(self.baseUrl, timeout=30, verify=False, files=data, cookies=self.cookie_jar, allow_redirects=False)
         cookies = response.cookies
         self.cookie_jar.update(cookies)
-        _LOGGER.info("got login cookies {}".format(cookies.items()))
+        _LOGGER.debug("got login cookie: %s", cookies.items())
         requests.get(self.baseUrl, timeout=30, verify=False, cookies=cookies)
         return cookies
 
@@ -61,7 +61,7 @@ class ZteClient():
         root = ET.fromstring(response.text)
         instances = root.find('OBJ_ACCESSDEV_ID').findall('Instance')
         devices = list(map(self.__instance_to_device, instances))
-        _LOGGER.info('found {} {} devices'.format(len(devices), connection_type))
+        _LOGGER.debug('found %s %s devices', len(devices), connection_type)
         return devices
 
     def __instance_to_device(self, instance):

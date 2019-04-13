@@ -1,0 +1,10 @@
+{
+    "domain": "zte",
+    "name": "Zte",
+    "documentation": "",
+    "requirements": [],
+    "dependencies": [],
+    "codeowners": [
+        "@TassSinclair"
+    ]
+}

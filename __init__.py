@@ -1,0 +1,1 @@
+"""ZTE Router communication component"""
