@@ -1,7 +1,6 @@
 import logging
 import voluptuous
 from typing import List
-from ZteClient import ZteClient
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.components.device_tracker import (
@@ -44,11 +43,11 @@ class ZteDeviceScanner(DeviceScanner):
 
     def __init__(self, host, user, password, tracked_devices,
                  excluded_devices):
-        import ZteClient
+        from zte_client import ZteClient
         self.tracked_devices = tracked_devices
         self.excluded_devices = excluded_devices
         self.results = []
-        self.zte_client = ZteClient.ZteClient(password, host=host, user=user)
+        self.zte_client = ZteClient(password, host=host, user=user)
     
     def perform_login(self):
         self.zte_client.login()
