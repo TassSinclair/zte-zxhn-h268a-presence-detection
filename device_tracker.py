@@ -81,7 +81,7 @@ class ZteDeviceScanner(DeviceScanner):
         host_name = None
         for device in self.results:
             if device.mac_address == mac_address:
-                host_name = device.name
+                host_name = device.host_name
                 break
 
         if not host_name or host_name == "--":
